@@ -2,6 +2,9 @@ from django.http import HttpResponse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from .models import volume_at_time
+from .forms import inputForm
+from django.shortcuts import redirect, render
 
 
 def index(request):
@@ -41,26 +44,49 @@ def interpolatePoly(x, y, xi):
 
     return yi, co
 
+def plot():
+        df = pd.read_csv("cardiacMRIdata.csv")
+        time = df.loc[:, "Time (ms)"]
+        baseline = df.loc[:, "Baseline"]
+        dobutamine = df.loc[:, "Dobutamine"]
 
-df = pd.read_csv("cardiacMRIdata.csv")
-time = df.loc[:, "Time (ms)"]
-baseline = df.loc[:, "Baseline"]
-dobutamine = df.loc[:, "Dobutamine"]
+        f, axes = plt.subplots(3, 1)
+        axes[0].plot(time, dobutamine, '.-')
+        axes[0].set_ylabel('Volume')
 
-f, axes = plt.subplots(3, 1)
-axes[0].plot(time, dobutamine, '.-')
-axes[0].set_ylabel('Volume')
+        # calculates times at which to interpolate
+        tInterpolated = np.linspace(np.min(time), np.max(time), 100)
+        yiP, aP = interpolatePoly(time, dobutamine, tInterpolated)
+        axes[1].plot(tInterpolated, yiP, '.-')
+        axes[1].set_ylabel('Volume')
 
-# calculates times at which to interpolate
-tInterpolated = np.linspace(np.min(time), np.max(time), 100)
-yiP, aP = interpolatePoly(time, dobutamine, tInterpolated)
-axes[1].plot(tInterpolated, yiP, '.-')
-axes[1].set_ylabel('Volume')
-
-yiB, aB = interpolateBspline(time, dobutamine, tInterpolated)
-axes[2].plot(tInterpolated, yiB, '.-')
-axes[2].set_ylabel('Volume')
+        yiB, aB = interpolateBspline(time, dobutamine, tInterpolated)
+        axes[2].plot(tInterpolated, yiB, '.-')
+        axes[2].set_ylabel('Volume')
 
 
-plt.show(block=True)
-plt.interactive(False)
+        plt.show(block=True)
+        plt.interactive(False)
+
+
+def home(request):
+    form = inputForm(request.POST)
+    if request.method == 'POST':
+        # form.is_valid() make the form to submit only
+        # when it contains CSRF Token
+        if form.is_valid():
+            # form.cleaned_data returns a dictionary of validated form input fields
+            time = form.cleaned_data['time']
+            volume = form.cleaned_data['volume']
+            queryset = volume_at_time(time = time, volume = volume)
+            queryset.save()
+            return redirect('home')
+        else:
+            pass
+
+    context = {
+        'form': form
+    }
+    return render(request, 'app/home.html', context)
+
+

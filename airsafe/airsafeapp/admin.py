@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import volume_at_time
+
+admin.site.register(volume_at_time)
