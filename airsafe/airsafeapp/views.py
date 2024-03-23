@@ -71,6 +71,9 @@ def plot():
 
 def home(request):
     form = inputForm(request.POST)
+    #display data
+    dataset = volume_at_time.objects.all()
+
     if request.method == 'POST':
         # form.is_valid() make the form to submit only
         # when it contains CSRF Token
@@ -85,7 +88,8 @@ def home(request):
             pass
 
     context = {
-        'form': form
+        'form': form,
+        'dataset': dataset
     }
     return render(request, 'app/home.html', context)
 
