@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import DataModel
+from .models import volume_at_time
 
-admin.site.register(DataModel)
+admin.site.register(volume_at_time)

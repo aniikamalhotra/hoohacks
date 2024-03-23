@@ -4,5 +4,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # including the codebase urls.py file
-    path('', include('codebase.urls'))
+    path('', include('airsafeapp.urls'))
 ]

@@ -70,7 +70,7 @@ def plot():
 
 
 def home(request):
-    form = inputForm(request.POST or None)
+    form = inputForm(request.POST)
     if request.method == 'POST':
         # form.is_valid() make the form to submit only
         # when it contains CSRF Token
@@ -88,4 +88,5 @@ def home(request):
         'form': form
     }
     return render(request, 'app/home.html', context)
+
 
