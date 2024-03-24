@@ -4,43 +4,47 @@ import { useLogoutFunction, withAuthInfo, useRedirectFunctions } from '@propelau
 import { useNavigate } from 'react-router-dom';
 import './App.css';
 
-
-function App({ isLoggedIn }) {
+const App = withAuthInfo((props) => {
+    // isLoggedIn and user are injected automatically from withAuthInfo
     const logoutFn = useLogoutFunction();
-    const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
-    const navigate = useNavigate();
-    const handleRedirectToHome = () => {
-        navigate('/home/');
-    };
     const color = '#4F4FAE';
-
-    return (
-        <div className="welcome-screen" style={{ backgroundColor: color, justifyContent: 'center' }}>
-            <div>
-                <img src={logo} width={200} height={200} />
-                <h1 style={{ color: "white" }}>Welcome to Medical Modeling!</h1>
-            </div>
-            <div className="content">
+    if (props.isLoggedIn) {
+        return (
+            <div className="welcome-screen" style={{ backgroundColor: color, justifyContent: 'center' }}>
                 <div>
-                    {isLoggedIn ? (
-                        <div className="centered-container">
-                            <h3 style={{color: "white"}}>The User is logged in</h3>
-                            <button type="button" class="btn btn-info">
-                                <a href="http://127.0.0.1:8000/home/">Go to Home</a>
-                            </button>
-                            <button onClick={() => logoutFn()}>Click here to log out</button>
-                        </div>
-                    ) : (
-                        <div>
-                            <h3 style={{color: "white"}}>To get started, please log in or create a new account.</h3>
-                            <br />
-                            <button onClick={() => redirectToSignupPage()}>Sign up</button>
-                            <button className="login-button" onClick={() => redirectToLoginPage()}>Login</button>
-                        </div>
-                    )}
+                    <img src={logo} width={200} height={200} />
+                    <h1 style={{ color: "white" }}>Welcome to Medical Modeling!</h1>
+                </div>
+                <div className="content">
+                    <div className="centered-container">
+                        <h3 style={{color: "white"}}> You are currently logged in as {props.user.firstName}</h3>
+                        <button type="button" className="btn btn-info">
+                            <a href="http://127.0.0.1:8000/home/">Go to Home</a>
+                        </button>
+                        <button onClick={() => props.logoutFn()}>Click here to log out</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-}
-export default withAuthInfo(App);
+        );
+    } else {
+        const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
+        return (
+            <div className="welcome-screen" style={{ backgroundColor: color, justifyContent: 'center' }}>
+                <div>
+                    <img src={logo} width={200} height={200} />
+                    <h1 style={{ color: "white" }}>Welcome to Medical Modeling!</h1>
+                </div>
+                <div className="content">
+                    <div>
+                        <h3 style={{color: "white"}}>To get started, please log in or create a new account.</h3>
+                        <br />
+                        <button onClick={() => redirectToSignupPage()}>Sign up</button>
+                        <button className="login-button" style="background: darkcyan;color:white;" onClick={() => redirectToLoginPage()}>Login</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
+export default App;

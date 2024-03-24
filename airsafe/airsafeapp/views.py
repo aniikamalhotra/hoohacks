@@ -82,6 +82,7 @@ def plot(request):
 
 
 def home(request):
+
     form = inputForm(request.POST)
     #display data
     dataset = volume_at_time.objects.all()
