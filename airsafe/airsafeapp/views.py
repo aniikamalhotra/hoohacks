@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from .models import volume_at_time
 from .forms import inputForm
 from django.shortcuts import redirect, render
+from io import StringIO
 
 
 def index(request):
@@ -45,7 +46,7 @@ def interpolatePoly(x, y, xi):
     return yi, co
 
 def plot():
-        df = pd.read_csv("cardiacMRIdata.csv")
+        df = pd.read_csv("airsafeapp/cardiacMRIdata.csv")
         time = df.loc[:, "Time (ms)"]
         baseline = df.loc[:, "Baseline"]
         dobutamine = df.loc[:, "Dobutamine"]
@@ -65,12 +66,24 @@ def plot():
         axes[2].set_ylabel('Volume')
 
 
-        plt.show(block=True)
-        plt.interactive(False)
+        # plt.show(block=True)
+        # plt.interactive(False)
+        # fig = plt.figure()
+        # plt.show(block=True)
+        #
+        # imgdata = StringIO()
+        # fig.savefig(imgdata, format='svg')
+        # imgdata.seek(0)
+        #
+        # data = imgdata.getvalue()
+        # return data
 
 
 def home(request):
     form = inputForm(request.POST)
+    #display data
+    dataset = volume_at_time.objects.all()
+
     if request.method == 'POST':
         # form.is_valid() make the form to submit only
         # when it contains CSRF Token
@@ -83,10 +96,14 @@ def home(request):
             return redirect('home')
         else:
             pass
-
     context = {
-        'form': form
+        'form': form,
+        'dataset': dataset,
     }
     return render(request, 'app/home.html', context)
 
+def delete(request, id):
+    entry = volume_at_time.objects.get(id = id)
+    entry.delete()
+    return redirect('home')
 

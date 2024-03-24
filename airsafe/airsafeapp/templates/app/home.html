@@ -12,5 +12,18 @@
         {{ form.as_table }}
         <input type="submit" value="Submit">
     </form>
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>Volume</th>
+        </tr>
+        {% for volume_at_time in dataset %}
+        <tr>
+            <td>{{ volume_at_time.time }}</td>
+            <td>{{ volume_at_time.volume }}</td>
+            <td><a href = "{% url 'delete' id=volume_at_time.id %}">delete</a></td>\
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
