@@ -21,10 +21,10 @@
         <tr>
             <td>{{ volume_at_time.time }}</td>
             <td>{{ volume_at_time.volume }}</td>
-            <td><a href = "{% url 'delete' id=volume_at_time.id %}">delete</a></td>\
+            <td><a href = "{% url 'delete' id=volume_at_time.id %}">delete</a></td>
         </tr>
         {% endfor %}
     </table>
-    <a href = "{% url 'plot' %}">I'm done</a>
+    <button type="button" class="btn btn-info"><a href = "{% url 'plot' %}">I'm done</a></button>
 </body>
 </html>
