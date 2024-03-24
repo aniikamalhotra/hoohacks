@@ -134,7 +134,8 @@ def delete(request, id):
 
 def ecgData(request):
     fig = plt.figure(num=1, clear=True)
-    df = pd.read_csv("airsafeapp/echocardiogram.csv", low_memory=False) #https://www.kaggle.com/code/loganalive/echocardiogram-dataset-uci/input
+    df = pd.read_csv("airsafeapp/echocardiogram.csv", low_memory=False)
+    # Source: https://www.kaggle.com/code/loganalive/echocardiogram-dataset-uci/input
 
     df['age'] = pd.to_numeric(df['age'], errors='coerce')
     df['lvdd'] = pd.to_numeric(df['lvdd'], errors='coerce')
