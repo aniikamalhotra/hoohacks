@@ -51,12 +51,17 @@ def interpolatePoly(x, y, xi):
 def plot(request):
         timeArray = []
         volumeArray = []
+
         items = volume_at_time.objects.all()
         for item in items:
             timeArray.append(float(item.time))
             volumeArray.append(float(item.volume))
         print(timeArray)
         print(volumeArray)
+
+        if len(timeArray) == 0 and len(volumeArray) == 0:
+            return render(request, 'app/nodata.html')  # Render a template indicating no data
+
         f, axes = plt.subplots(3, 1)
         axes[0].plot(timeArray, volumeArray, '.-')
         axes[0].set_ylabel('Volume')
@@ -101,7 +106,7 @@ def home(request):
     context = {
         'form': form,
         'dataset': dataset,
-        #'graph': plot()
+
     }
     return render(request, 'app/home.html', context)
 
