@@ -9,6 +9,8 @@ from .forms import inputForm
 from django.shortcuts import redirect, render
 from io import StringIO
 import io, base64
+import urllib.parse
+from ucimlrepo import fetch_ucirepo
 
 
 def index(request):
@@ -55,8 +57,6 @@ def plot(request):
         for item in items:
             timeArray.append(float(item.time))
             volumeArray.append(float(item.volume))
-        print(timeArray)
-        print(volumeArray)
 
         if len(timeArray) == 0 and len(volumeArray) == 0:
             return render(request, 'app/nodata.html')  # Render a template indicating no data
@@ -112,13 +112,14 @@ def home(request):
             volume = form.cleaned_data['volume']
             queryset = volume_at_time(time = time, volume = volume)
             queryset.save()
+
             return redirect('home')
         else:
             pass
     context = {
         'form': form,
         'dataset': dataset,
-        #'graph': plot()
+        #'graph': ecgData(request)
     }
     return render(request, 'app/home.html', context)
 
@@ -126,4 +127,46 @@ def delete(request, id):
     entry = volume_at_time.objects.get(id = id)
     entry.delete()
     return redirect('home')
+
+def ecgData(request):
+
+
+    df = pd.read_csv("airsafeapp/echocardiogram.csv", low_memory=False) #https://www.kaggle.com/code/loganalive/echocardiogram-dataset-uci/input
+
+    df['age'] = pd.to_numeric(df['age'], errors='coerce')
+    df['lvdd'] = pd.to_numeric(df['lvdd'], errors='coerce')
+
+    df = df.dropna(subset=['age', 'lvdd'])
+
+
+    plt.scatter(df['age'], df['lvdd'], color='black')
+
+    # Calculate line of best fit
+    slope, intercept = np.polyfit(df['age'], df['lvdd'], 1)
+    x = np.array([min(df['age']), max(df['age'])])
+    y = slope * x + intercept
+
+    # Plot the line of best fit
+    plt.plot(x, y, color='red')
+
+    # Calculate correlation coefficient (r value)
+    r_value = np.corrcoef(df['age'], df['lvdd'])[0, 1]
+    print("Correlation coefficient (r value):", r_value)
+
+    # Add labels and title
+    plt.xlabel('Age')
+    plt.ylabel('LVDD')
+    plt.title('Scatter plot with line of best fit')
+
+
+    fig = plt.gcf()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
+    return render(request, 'app/plot.html', {'data': uri})
+
+
+
 
