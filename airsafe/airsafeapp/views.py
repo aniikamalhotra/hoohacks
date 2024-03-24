@@ -55,11 +55,9 @@ def plot(request):
         for item in items:
             timeArray.append(float(item.time))
             volumeArray.append(float(item.volume))
-        print(timeArray)
-        print(volumeArray)
 
         if len(timeArray) == 0 and len(volumeArray) == 0:
-            return render(request, 'app/nodata.html')  # Render a template indicating no data
+            return render(request, 'app/plot.html', {"text": "Error: Graphs couldn't be generated because no data was entered!"})  # Render a template indicating no data
 
 
         f, axes = plt.subplots(3, 1)
