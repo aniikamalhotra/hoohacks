@@ -1,3 +1,5 @@
+import urllib
+
 from django.http import HttpResponse
 import pandas as pd
 import numpy as np
@@ -46,7 +48,7 @@ def interpolatePoly(x, y, xi):
 
     return yi, co
 
-def plot():
+def plot(request):
         timeArray = []
         volumeArray = []
         items = volume_at_time.objects.all()
@@ -70,22 +72,13 @@ def plot():
         axes[2].set_ylabel('Volume')
 
 
-        plt.show(block=True)
-        plt.interactive(False)
-        fig = plt.show()
-        # plt.show(block=True)
-        #
-        # imgdata = StringIO()
-        # fig.savefig(imgdata, format='svg')
-        # imgdata.seek(0)
-        #
-        # data = imgdata.getvalue()
-        # context = []
-        # flike = io.BytesIO()
-        # fig.savefig(flike)
-        # b64 = base64.b64encode(flike.getvalue()).decode()
-        # context['chart'] = b64
-        # return context
+        fig = plt.gcf()
+        buf = io.BytesIO()
+        fig.savefig(buf, format = 'png')
+        buf.seek(0)
+        string = base64.b64encode(buf.read())
+        uri = urllib.parse.quote(string)
+        return render(request, 'app/plot.html', {'data': uri})
 
 
 def home(request):
@@ -102,32 +95,6 @@ def home(request):
             volume = form.cleaned_data['volume']
             queryset = volume_at_time(time = time, volume = volume)
             queryset.save()
-            timeArray = []
-            volumeArray = []
-            items = volume_at_time.objects.all()
-            for item in items:
-                timeArray.append(float(item.time))
-                volumeArray.append(float(item.volume))
-            print(timeArray)
-            print(volumeArray)
-            f, axes = plt.subplots(3, 1)
-            axes[0].plot(timeArray, volumeArray, '.-')
-            axes[0].set_ylabel('Volume')
-
-            # calculates times at which to interpolate
-            tInterpolated = np.linspace(np.min(timeArray), np.max(timeArray), 100)
-            yiP, aP = interpolatePoly(timeArray, volumeArray, tInterpolated)
-            axes[1].plot(tInterpolated, yiP, '.-')
-            axes[1].set_ylabel('Volume')
-
-            yiB, aB = interpolateBspline(timeArray, volumeArray, tInterpolated)
-            axes[2].plot(tInterpolated, yiB, '.-')
-            axes[2].set_ylabel('Volume')
-
-            plt.show(block=True)
-            plt.interactive(False)
-
-            plt.savefig('plot.png')
             return redirect('home')
         else:
             pass
