@@ -9,6 +9,8 @@ from .forms import inputForm
 from django.shortcuts import redirect, render
 from io import StringIO
 import io, base64
+import urllib.parse
+from ucimlrepo import fetch_ucirepo
 
 
 def index(request):
@@ -112,13 +114,14 @@ def home(request):
             volume = form.cleaned_data['volume']
             queryset = volume_at_time(time = time, volume = volume)
             queryset.save()
+
             return redirect('home')
         else:
             pass
     context = {
         'form': form,
         'dataset': dataset,
-        #'graph': plot()
+        #'graph': ecgData(request)
     }
     return render(request, 'app/home.html', context)
 
@@ -126,4 +129,45 @@ def delete(request, id):
     entry = volume_at_time.objects.get(id = id)
     entry.delete()
     return redirect('home')
+
+def ecgData(request):
+
+    # Fetch dataset
+    echocardiogram = fetch_ucirepo(id=38)
+
+    # Extract data
+    X = echocardiogram.data.features
+    y = echocardiogram.data.targets
+
+    # Extract metadata
+    metadata = echocardiogram.metadata
+
+    # Extract variables information
+    variables = echocardiogram.variables
+
+    # Extract index of 'age' and 'lvdd' variables
+    age_index = variables.index('age')
+    lvdd_index = variables.index('lvdd')
+
+    # Extract 'age' and 'lvdd' data from features
+    age_data = X[:, age_index]
+    lvdd_data = X[:, lvdd_index]
+
+    # Plot 'age' vs 'lvdd'
+    plt.scatter(age_data, lvdd_data)
+    plt.xlabel('Age')
+    plt.ylabel('LVDD')
+    plt.title('Scatter Plot of Age vs LVDD')
+    plt.show()
+
+    fig = plt.gcf()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
+    return render(request, 'app/plot.html', {'data': uri})
+
+
+
 

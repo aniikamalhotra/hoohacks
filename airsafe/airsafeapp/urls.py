@@ -7,5 +7,7 @@ from . import views
 urlpatterns = [
     path('', home, name='home'),
     path("delete_item/<int:id>/", views.delete, name = "delete"),
-    path("plot", views.plot, name ="plot")
+    path("plot", views.plot, name ="plot"),
+    path("data", views.ecgData, name ="data")
+
 ]
