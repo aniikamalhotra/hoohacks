@@ -158,7 +158,7 @@ def ecgData(request):
     # Add labels and title
     plt.xlabel('Age')
     plt.ylabel('LVDD')
-    plt.title('Scatter plot with line of best fit')
+    plt.title('Scatter Plot with Line of Best Fit for Age vs LVDD')
 
     fig = plt.gcf()
     buf = io.BytesIO()
