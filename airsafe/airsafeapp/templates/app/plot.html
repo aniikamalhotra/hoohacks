@@ -1,20 +1,21 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <style>
-        img {
-            color: red;
-            font: 20px Bold;
-        }
-    </style>
-    <title>Title</title>
-    <button type="button" class="btn btn-info"><a href="{% url 'home' %}" class="btn btn-outline-secondary me-2">Back</a></button>
-  <img src  = "data:image/png;base64, {{data}}" alt= "{{text}}" >
+{% extends "../app/base.html" %}
 
-</head>
-<body>
-
-</body>
-</html>
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="text-center mt-5">
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary me-2">Back</a>
+            </div>
+            <div class="text-center mt-3">
+                {% if data %}
+                    <img src="data:image/png;base64, {{data}}" alt="{{text}}" class="img-fluid">
+                {% else %}
+                    <span style="color: red; font-size: 20px; font-weight: bold;">Alternative font in case of invalid image</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
