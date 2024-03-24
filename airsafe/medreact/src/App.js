@@ -1,12 +1,17 @@
 import logo from './logo.svg';
 import React from 'react';
 import { useLogoutFunction, withAuthInfo, useRedirectFunctions } from '@propelauth/react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 
 function App({ isLoggedIn }) {
     const logoutFn = useLogoutFunction();
     const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
+    const navigate = useNavigate();
+    const handleRedirectToHome = () => {
+        navigate('/home/');
+    };
     const color = '#4F4FAE';
 
     return (
@@ -19,6 +24,7 @@ function App({ isLoggedIn }) {
                     {isLoggedIn ? (
                         <div className="centered-container">
                             <h3 style={{color: "white"}}>The User is logged in</h3>
+                            <a href="http://127.0.0.1:8000/home/">Go to Home</a>
                             <button onClick={() => logoutFn()}>Click here to log out</button>
                         </div>
                     ) : (
