@@ -61,19 +61,32 @@ def plot(request):
         if len(timeArray) == 0 and len(volumeArray) == 0:
             return render(request, 'app/nodata.html')  # Render a template indicating no data
 
+
         f, axes = plt.subplots(3, 1)
+        f.suptitle("Interpolated Graphs of Time vs Volume")
+
         axes[0].plot(timeArray, volumeArray, '.-')
         axes[0].set_ylabel('Volume')
+        axes[0].set_xlabel('Time')
+        axes[0].set_title('Original Data')
+
 
         # calculates times at which to interpolate
         tInterpolated = np.linspace(np.min(timeArray), np.max(timeArray), 100)
         yiP, aP = interpolatePoly(timeArray, volumeArray, tInterpolated)
         axes[1].plot(tInterpolated, yiP, '.-')
         axes[1].set_ylabel('Volume')
+        axes[1].set_xlabel('Time')
+        axes[1].set_title('Polynomial Interpolation')
+
 
         yiB, aB = interpolateBspline(timeArray, volumeArray, tInterpolated)
         axes[2].plot(tInterpolated, yiB, '.-')
         axes[2].set_ylabel('Volume')
+        axes[2].set_xlabel('Time')
+        axes[2].set_title('B-Spline Interpolation')
+
+        plt.tight_layout()
 
 
         fig = plt.gcf()
