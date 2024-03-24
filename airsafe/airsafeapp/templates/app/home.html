@@ -21,6 +21,7 @@
         <tr>
             <td>{{ volume_at_time.time }}</td>
             <td>{{ volume_at_time.volume }}</td>
+            <td><a href = "{% url 'delete' id=volume_at_time.id %}">delete</a></td>\
         </tr>
         {% endfor %}
     </table>
