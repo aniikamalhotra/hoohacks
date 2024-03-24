@@ -51,6 +51,7 @@ def interpolatePoly(x, y, xi):
     return yi, co
 
 def plot(request):
+        fig = plt.figure(num=1, clear=True)
         timeArray = []
         diameterArray = []
         items = diameter_at_time.objects.all().order_by('time')
@@ -95,13 +96,15 @@ def plot(request):
         buf.seek(0)
         string = base64.b64encode(buf.read())
         uri = urllib.parse.quote(string)
-        return render(request, 'app/plot.html', {'data': uri})
+        context = {}
+        context['data'] = uri
+        return render(request, 'app/plot.html', context)
 
 
 def home(request):
     form = inputForm(request.POST)
     #display data
-    dataset = diameter_at_time.objects.all()
+    dataset = diameter_at_time.objects.all().order_by('time')
 
     if request.method == 'POST':
         # form.is_valid() make the form to submit only
@@ -131,8 +134,7 @@ def delete(request, id):
     return redirect('home')
 
 def ecgData(request):
-
-
+    fig = plt.figure(num=1, clear=True)
     df = pd.read_csv("airsafeapp/echocardiogram.csv", low_memory=False) #https://www.kaggle.com/code/loganalive/echocardiogram-dataset-uci/input
 
     df['age'] = pd.to_numeric(df['age'], errors='coerce')
@@ -166,7 +168,9 @@ def ecgData(request):
     buf.seek(0)
     string = base64.b64encode(buf.read())
     uri = urllib.parse.quote(string)
-    return render(request, 'app/plot.html', {'data': uri})
+    context = {}
+    context['data'] = uri
+    return render(request, 'app/plot.html', context)
 
 
 
