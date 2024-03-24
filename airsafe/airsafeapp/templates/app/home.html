@@ -30,27 +30,6 @@
             </tr>
             {% endfor %}
         </tbody>
-    <table>
-        <tr>
-            <th>Time</th>
-            <th>Diameter</th>
-        </tr>
-        {% for diameter_at_time in dataset %}
-        <tr>
-            <td>{{ diameter_at_time.time }}</td>
-
-            <td>{{ diameter_at_time.diameter }}</td>
-            <td><a href = "{% url 'delete' id=diameter_at_time.id %}">delete</a></td>
-        </tr>
-        {% endfor %}
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-{% endif %}
-    </table>
 
     <a href="{% url 'plot' %}" class="btn btn-primary">I'm done</a>
 </div>

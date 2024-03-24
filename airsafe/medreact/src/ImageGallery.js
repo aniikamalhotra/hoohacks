@@ -1,5 +1,7 @@
 import React from 'react';
 import './ImageGallery.css'; // Styles for the image gallery
+import AliceCarousel from "react-alice-carousel";
+//import "react-alice-carousel/lib/alice-carousel.css";
 
 function ImageGallery() {
     // Array of image paths

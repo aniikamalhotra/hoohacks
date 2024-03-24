@@ -25,8 +25,9 @@ function App({ isLoggedIn, user }) {
                     {isLoggedIn ? (
                         <>
                             <h3 style={{color: "white"}}> You are currently logged in as {user.firstName}</h3>
-                            <button type="button" className="btn btn-info" onClick={() => navigate('/home/')}>
-                                Go to Home
+                            <button type="button" className="btn btn-info">
+                                <a href={"http://127.0.0.1:8000/home/"}>Go to Home</a>
+
                             </button>
                             <button onClick={() => logoutFn()}>Click here to log out</button>
                         </>
@@ -39,7 +40,6 @@ function App({ isLoggedIn, user }) {
                         </>
                     )}
                 </div>
-                <ImageGallery />
             </div>
         </div>
     );
