@@ -21,6 +21,7 @@ def index(request):
 
 def interpolateBspline(x, y, xi):
     yi = []
+    yi = []
     A = y
     for i in xi:
         #if x[0] <= i <= x[1]:
