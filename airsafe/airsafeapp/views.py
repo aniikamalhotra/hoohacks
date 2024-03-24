@@ -96,9 +96,7 @@ def plot(request):
         buf.seek(0)
         string = base64.b64encode(buf.read())
         uri = urllib.parse.quote(string)
-        context = {}
-        context['data'] = uri
-        return render(request, 'app/plot.html', context)
+        return render(request, 'app/plot.html', {'data': uri})
 
 
 def home(request):
@@ -118,6 +116,7 @@ def home(request):
                 return redirect('home')
             queryset = diameter_at_time(time = time, diameter = diameter)
             queryset.save()
+
             return redirect('home')
         else:
             pass
