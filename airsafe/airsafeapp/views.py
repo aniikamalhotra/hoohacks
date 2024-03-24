@@ -4,11 +4,13 @@ from django.http import HttpResponse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 from .models import volume_at_time
 from .forms import inputForm
 from django.shortcuts import redirect, render
 from io import StringIO
 import io, base64
+from django.contrib import messages
 
 
 def index(request):
@@ -109,6 +111,9 @@ def home(request):
             # form.cleaned_data returns a dictionary of validated form input fields
             time = form.cleaned_data['time']
             volume = form.cleaned_data['volume']
+            if volume_at_time.objects.filter(time=time).exists():
+                messages.error(request, 'Time already exists in the database.')
+                return redirect('home')
             queryset = volume_at_time(time = time, volume = volume)
             queryset.save()
             return redirect('home')
