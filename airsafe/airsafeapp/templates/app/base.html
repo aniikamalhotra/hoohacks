@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Medical Modeling {% endblock %}</title>
+    <style>
+        .container {
+            margin: 0 auto; /* This will center the container horizontally */
+            max-width: 800px; /* Optional: You can set a maximum width for the container */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% bootstrap_javascript %}
+
+</body>
+</html>
