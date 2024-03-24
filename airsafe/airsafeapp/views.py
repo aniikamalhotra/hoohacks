@@ -4,11 +4,15 @@ from django.http import HttpResponse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 from .models import volume_at_time
 from .forms import inputForm
 from django.shortcuts import redirect, render
 from io import StringIO
 import io, base64
+from django.contrib import messages
+import urllib.parse
+from ucimlrepo import fetch_ucirepo
 
 
 def index(request):
@@ -97,7 +101,6 @@ def plot(request):
 
 
 def home(request):
-
     form = inputForm(request.POST)
     #display data
     dataset = volume_at_time.objects.all()
@@ -109,6 +112,9 @@ def home(request):
             # form.cleaned_data returns a dictionary of validated form input fields
             time = form.cleaned_data['time']
             volume = form.cleaned_data['volume']
+            if volume_at_time.objects.filter(time=time).exists():
+                messages.error(request, 'Time already exists in the database.')
+                return redirect('home')
             queryset = volume_at_time(time = time, volume = volume)
             queryset.save()
             return redirect('home')
@@ -117,7 +123,7 @@ def home(request):
     context = {
         'form': form,
         'dataset': dataset,
-        #'graph': plot()
+        #'graph': ecgData(request)
     }
     return render(request, 'app/home.html', context)
 
@@ -125,4 +131,45 @@ def delete(request, id):
     entry = volume_at_time.objects.get(id = id)
     entry.delete()
     return redirect('home')
+
+def ecgData(request):
+
+
+    df = pd.read_csv("airsafeapp/echocardiogram.csv", low_memory=False) #https://www.kaggle.com/code/loganalive/echocardiogram-dataset-uci/input
+
+    df['age'] = pd.to_numeric(df['age'], errors='coerce')
+    df['lvdd'] = pd.to_numeric(df['lvdd'], errors='coerce')
+
+    df = df.dropna(subset=['age', 'lvdd'])
+
+
+    plt.scatter(df['age'], df['lvdd'], color='black')
+
+    # Calculate line of best fit
+    slope, intercept = np.polyfit(df['age'], df['lvdd'], 1)
+    x = np.array([min(df['age']), max(df['age'])])
+    y = slope * x + intercept
+
+    # Plot the line of best fit
+    plt.plot(x, y, color='red')
+
+    # Calculate correlation coefficient (r value)
+    r_value = np.corrcoef(df['age'], df['lvdd'])[0, 1]
+    print("Correlation coefficient (r value):", r_value)
+
+    # Add labels and title
+    plt.xlabel('Age')
+    plt.ylabel('LVDD')
+    plt.title('Scatter plot with line of best fit')
+
+    fig = plt.gcf()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
+    return render(request, 'app/plot.html', {'data': uri})
+
+
+
 
