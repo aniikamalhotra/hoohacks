@@ -1,35 +1,17 @@
 <!DOCTYPE html>
-{% extends "../app/base.html" %}
-
-{% block content %}
-
-<a href="{% url 'base' %}" class="btn btn-primary">Login Screen</a>
-<div class="container">
-    <form action="." method="POST" class="mt-3">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action='.' method="POST">
         {% csrf_token %}
         {{ form.as_table }}
-        <input type="submit" value="Submit" class="btn btn-primary">
+        <input type="submit" value="Submit">
     </form>
-
-    <table class="table table-striped mt-5">
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Volume</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for volume_at_time in dataset %}
-            <tr>
-                <td>{{ volume_at_time.time }}</td>
-                <td>{{ volume_at_time.volume }}</td>
-                <td>
-                    <a href="{% url 'delete' id=volume_at_time.id %}" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
     <table>
         <tr>
             <th>Time</th>
@@ -51,12 +33,7 @@
             </ul>
 {% endif %}
     </table>
-
-    <a href="{% url 'plot' %}" class="btn btn-primary">I'm done</a>
-</div>
-{% endblock %}
     <button type="button" class="btn btn-info"><a href = "{% url 'plot' %}">I'm done</a></button>
     <button type="button" class="btn btn-info"><a href = "{% url 'data' %}">Data</a></button>
-
 </body>
 </html>
