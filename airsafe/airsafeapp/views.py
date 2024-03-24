@@ -6,7 +6,7 @@ from .models import volume_at_time
 from .forms import inputForm
 from django.shortcuts import redirect, render
 from io import StringIO
-import io, base64, urllib
+import io, base64
 
 
 def index(request):
@@ -70,9 +70,9 @@ def plot():
         axes[2].set_ylabel('Volume')
 
 
-        # plt.show(block=True)
-        # plt.interactive(False)
-        fig = plt.figure()
+        plt.show(block=True)
+        plt.interactive(False)
+        fig = plt.show()
         # plt.show(block=True)
         #
         # imgdata = StringIO()
@@ -86,12 +86,6 @@ def plot():
         # b64 = base64.b64encode(flike.getvalue()).decode()
         # context['chart'] = b64
         # return context
-        buf = io.BytesIO()
-        fig.savefig(buf, format='png')
-        buf.seek(0)
-        string = base64.b64encode(buf.read())
-        uri = urllib.parse.quote(string)
-        return ( {'data':uri})
 
 
 def home(request):
@@ -130,37 +124,17 @@ def home(request):
             axes[2].plot(tInterpolated, yiB, '.-')
             axes[2].set_ylabel('Volume')
 
-            # plt.show(block=True)
-            # plt.interactive(False)
-            fig = plt.figure()
-            # plt.show(block=True)
-            #
-            # imgdata = StringIO()
-            # fig.savefig(imgdata, format='svg')
-            # imgdata.seek(0)
-            #
-            # data = imgdata.getvalue()
-            # context = []
-            # flike = io.BytesIO()
-            # fig.savefig(flike)
-            # b64 = base64.b64encode(flike.getvalue()).decode()
-            # context['chart'] = b64
-            # return context
-            buf = io.BytesIO()
-            fig.savefig(buf, format='png')
-            buf.seek(0)
-            string = base64.b64encode(buf.read())
-            uri = urllib.parse.quote(string)
-            context = {}
-            context['data'] = uri
+            plt.show(block=True)
+            plt.interactive(False)
 
+            plt.savefig('plot.png')
             return redirect('home')
         else:
             pass
     context = {
         'form': form,
         'dataset': dataset,
-        # 'graph': plot()
+        #'graph': plot()
     }
     return render(request, 'app/home.html', context)
 
