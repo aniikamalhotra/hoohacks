@@ -2,7 +2,7 @@ from django import forms
 
 class inputForm(forms.Form):
     time = forms.FloatField()
-    volume = forms.FloatField()
+    diameter = forms.FloatField()
 
     class Meta:
-        fields = ['time', 'volume']
+        fields = ['time', 'diameter']
