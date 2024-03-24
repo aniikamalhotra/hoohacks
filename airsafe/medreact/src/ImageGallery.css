@@ -1,0 +1,17 @@
+/* ImageGallery.css */
+.image-gallery {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.image-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.image-list img {
+    width: 200px; /* Adjust image width as needed */
+    height: auto; /* Maintain aspect ratio */
+}

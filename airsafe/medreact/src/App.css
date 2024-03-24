@@ -6,6 +6,22 @@
   height: 100vh;
 }
 
+.centered-content h1{
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.centered-container button {
+    margin: 0 auto;
+}
+.centered-logo {
+    display: block;
+    margin: 0 auto;
+    animation: fadeIn 2s ease-in-out;
+    width: 200px;
+    height: 200px;
+}
+
 .content h3{
     animation: fadeIn 2s ease-in-out;
 }
@@ -13,6 +29,7 @@
   font-size: 3rem;
   animation: fadeIn 2s ease-in-out;
 }
+
 
 @keyframes fadeIn {
   0% {
