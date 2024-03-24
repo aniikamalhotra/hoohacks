@@ -12,7 +12,7 @@
                 {% if data %}
                     <img src="data:image/png;base64, {{data}}" alt="{{text}}" class="img-fluid">
                 {% else %}
-                    <span style="color: red; font-size: 20px; font-weight: bold;">Alternative font in case of invalid image</span>
+                    <span style="color: red; font-size: 20px; font-weight: bold;">Error: Graphs couldn't be generated because no data was entered!</span>
                 {% endif %}
             </div>
         </div>

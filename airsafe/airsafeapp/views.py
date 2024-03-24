@@ -67,8 +67,8 @@ def plot(request):
         f.suptitle("Interpolated Graphs of Time vs Volume")
 
         axes[0].plot(timeArray, diameterArray, '.-')
-        axes[0].set_ylabel('Diameter')
-        axes[0].set_xlabel('Time')
+        axes[0].set_ylabel('Diameter(mm)')
+        axes[0].set_xlabel('Time(s)')
         axes[0].set_title('Original Data')
 
 
@@ -76,15 +76,15 @@ def plot(request):
         tInterpolated = np.linspace(np.min(timeArray), np.max(timeArray), 100)
         yiP, aP = interpolatePoly(timeArray, diameterArray, tInterpolated)
         axes[1].plot(tInterpolated, yiP, '.-')
-        axes[1].set_ylabel('Diameter')
-        axes[1].set_xlabel('Time')
+        axes[1].set_ylabel('Diameter(mm)')
+        axes[1].set_xlabel('Time(s)')
         axes[1].set_title('Polynomial Interpolation')
 
 
         yiB, aB = interpolateBspline(timeArray, diameterArray, tInterpolated)
         axes[2].plot(tInterpolated, yiB, '.-')
-        axes[2].set_ylabel('Diameter')
-        axes[2].set_xlabel('Time')
+        axes[2].set_ylabel('Diameter(mm)')
+        axes[2].set_xlabel('Time(s)')
         axes[2].set_title('B-Spline Interpolation')
 
         plt.tight_layout()
@@ -157,9 +157,9 @@ def ecgData(request):
     print("Correlation coefficient (r value):", r_value)
 
     # Add labels and title
-    plt.xlabel('Age')
-    plt.ylabel('LVDD')
-    plt.title('Scatter Plot with Line of Best Fit for Age vs LVDD')
+    plt.xlabel('Age (Year)')
+    plt.ylabel('LVDD (mm)')
+    plt.title('Scatter Plot of Left Ventricle Diastolic Dimension vs. Patient Age')
 
     fig = plt.gcf()
     buf = io.BytesIO()

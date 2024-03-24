@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 {% extends "../app/base.html" %}
 
 {% block content %}
@@ -14,8 +14,8 @@
     <table class="table table-striped mt-5">
         <thead>
             <tr>
-                <th>Time</th>
-                <th>Diameter</th>
+                <th>Time(s)</th>
+                <th>Diameter(mm)</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -30,12 +30,13 @@
             </tr>
             {% endfor %}
         </tbody>
+    </table>
 
-    <a href="{% url 'plot' %}" class="btn btn-primary">I'm done</a>
+    <div class="mt-3">
+        <button type="button" class="btn btn-info"><a href="{% url 'plot' %}">I'm done</a></button>
+        <button type="button" class="btn btn-info"><a href="{% url 'data' %}">Data</a></button>
+    </div>
 </div>
-{% endblock %}
-    <button type="button" class="btn btn-info"><a href = "{% url 'plot' %}">I'm done</a></button>
-    <button type="button" class="btn btn-info"><a href = "{% url 'data' %}">Data</a></button>
+ {% endblock %}
 
-</body>
-</html>
+
