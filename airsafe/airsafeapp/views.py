@@ -51,12 +51,10 @@ def interpolatePoly(x, y, xi):
 def plot(request):
         timeArray = []
         volumeArray = []
-        items = volume_at_time.objects.all()
+        items = volume_at_time.objects.all().order_by('time')
         for item in items:
             timeArray.append(float(item.time))
             volumeArray.append(float(item.volume))
-        print(timeArray)
-        print(volumeArray)
         f, axes = plt.subplots(3, 1)
         axes[0].plot(timeArray, volumeArray, '.-')
         axes[0].set_ylabel('Volume')
@@ -84,7 +82,7 @@ def plot(request):
 def home(request):
     form = inputForm(request.POST)
     #display data
-    dataset = volume_at_time.objects.all()
+    dataset = volume_at_time.objects.all().order_by('time')
 
     if request.method == 'POST':
         # form.is_valid() make the form to submit only
