@@ -12,7 +12,7 @@ from io import StringIO
 import io, base64
 from django.contrib import messages
 import urllib.parse
-from ucimlrepo import fetch_ucirepo
+
 
 
 def index(request):
